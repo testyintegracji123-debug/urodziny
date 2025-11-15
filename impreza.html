@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎉 18-tka Foto Galeria</title>
+    <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+    <style>
+        /* ===== RESET ===== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5d3ff, #ffd3b6);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #5a0fc8;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        #upload_widget {
+            background-color: #5a0fc8;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        #upload_widget:hover {
+            background-color: #7d33ff;
+            transform: scale(1.05);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #4a0fa8;
+        }
+
+        #gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        #gallery img {
+            width: 100%;
+            border-radius: 15px;
+            object-fit: cover;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        #gallery img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            #upload_widget {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🎉 18-tka Foto Galeria</h1>
+
+    <button id="upload_widget">📷 Dodaj zdjęcie</button>
+
+    <h2>Galeria</h2>
+    <div id="gallery"></div>
+
+    <script>
+        const gallery = document.getElementById('gallery');
+
+        const myWidget = cloudinary.createUploadWidget({
+            cloudName: 'dmjst4oel', // <- wpisz swoje cloudName
+            uploadPreset: 'impreza_upload', // <- unsigned preset
+            multiple: false,
+            maxFileSize: 10 * 1024 * 1024, // 10 MB
+            sources: ['local', 'camera'],
+        }, (error, result) => {
+            if (!error && result && result.event === "success") {
+                console.log('Zdjęcie przesłane:', result.info.secure_url);
+
+                const img = document.createElement('img');
+                img.src = result.info.secure_url;
+                gallery.prepend(img);
+            }
+        });
+
+        document.getElementById("upload_widget").addEventListener("click", function () {
+            myWidget.open();
+        }, false);
+    </script>
+</body>
+
+</html>
